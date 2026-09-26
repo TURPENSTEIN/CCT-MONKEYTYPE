@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Monkeytype CCT — Cognitive/Typing Speed Training</title>
+<title>Monkeytype CCT — Cognitive Training</title>
 <style>
 :root{
   --bg:#1a1b26;
@@ -669,6 +669,7 @@ function renderWords(){
 }
 function updateCaret(){
  const cur=wordsEl.children[state.wi];
+ const CH=28;
  let x=8,y=8;
  if(cur){
   const chars=cur.children;
@@ -676,10 +677,10 @@ function updateCaret(){
   const sr=stageEl.getBoundingClientRect();
   if(state.ci>=chars.length){
    const r=cur.getBoundingClientRect();
-   x=r.right-sr.left+4; y=r.top-sr.top+10;
+   x=r.right-sr.left+4; y=r.top-sr.top+(r.height-CH)/2;
   } else if(target){
    const r=target.getBoundingClientRect();
-   x=r.left-sr.left-1; y=r.top-sr.top+8;
+   x=r.left-sr.left-1; y=r.top-sr.top+(r.height-CH)/2;
   }
  }
  caretEl.style.left=x+'px'; caretEl.style.top=y+'px';
