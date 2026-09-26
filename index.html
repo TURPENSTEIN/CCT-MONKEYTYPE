@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>MINDBUILD — CCT / ICT Typing Trainer</title>
+<title>Monkeytype CCT — Cognitive/Typing Speed Training</title>
 <style>
 :root{
   --bg:#1a1b26;
@@ -33,7 +33,6 @@ body{
 }
 body.stop-active{box-shadow:inset 0 0 0 6px var(--err), inset 0 0 60px rgba(247,118,142,.45);}
 a{color:inherit}
-/* HEADER */
 header{
   display:flex;align-items:center;gap:16px;
   padding:14px 22px;max-width:1100px;width:100%;margin:0 auto;
@@ -46,7 +45,7 @@ header{
 }
 .logo small{display:block;font-weight:500;color:var(--dim);font-size:11px;letter-spacing:2px}
 nav{display:flex;gap:6px;margin-left:8px;flex-wrap:wrap}
-nav button,.chip{
+nav button{
   background:transparent;border:0;color:var(--dim);font-family:var(--mono);
   font-size:13px;padding:8px 10px;border-radius:8px;cursor:pointer;
 }
@@ -62,7 +61,6 @@ nav button.active,nav button:hover{color:var(--accent);background:rgba(122,162,2
   background:var(--bg2);border:1px solid var(--dim2);color:var(--muted);
   border-radius:10px;padding:9px 11px;cursor:pointer;font-size:14px;
 }
-/* LAYOUT */
 .wrap{max-width:1100px;width:100%;margin:0 auto;padding:0 22px 40px;flex:1}
 .hud{
   display:grid;grid-template-columns:repeat(6,1fr);
@@ -82,6 +80,13 @@ nav button.active,nav button:hover{color:var(--accent);background:rgba(122,162,2
   background:var(--bg2);border:1px solid rgba(255,255,255,.06);
   padding:10px;border-radius:14px;margin-bottom:12px;
 }
+.sub-controls{
+  display:none;gap:10px;align-items:center;flex-wrap:wrap;
+  background:var(--bg3);border:1px dashed var(--dim2);
+  padding:8px 12px;border-radius:12px;margin-bottom:12px;
+  font-size:12px;color:var(--muted);
+}
+.sub-controls.open{display:flex}
 .mode-tabs{display:flex;gap:6px;flex-wrap:wrap}
 .mode-tabs button{
   border:1px solid transparent;background:transparent;color:var(--muted);
@@ -97,31 +102,45 @@ nav button.active,nav button:hover{color:var(--accent);background:rgba(122,162,2
 }
 .btn.ghost{background:transparent;border:1px solid var(--dim2);color:var(--muted)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
-.settings-panel{
-  display:none;background:var(--card);border:1px solid rgba(255,255,255,.07);
-  border-radius:14px;padding:14px;margin-bottom:12px;
-  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;
-}
-.settings-panel.open{display:grid}
-.set-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;color:var(--muted)}
-.set-row input[type=range]{width:120px}
-.switch{position:relative;width:38px;height:20px;background:var(--dim2);border-radius:999px;cursor:pointer;border:0}
+.btn.small{padding:6px 12px;font-size:12px}
+input[type=range]{accent-color:var(--accent)}
+.set-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;color:var(--muted);padding:6px 0}
+.set-row input[type=range]{width:130px}
+.set-group{margin-bottom:6px}
+.set-group h4{margin:10px 0 4px;font-family:var(--sans);font-size:11px;letter-spacing:1.5px;color:var(--dim)}
+.switch{position:relative;width:38px;height:20px;background:var(--dim2);border-radius:999px;cursor:pointer;border:0;flex:none}
 .switch.on{background:var(--accent)}
 .switch::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:.15s}
 .switch.on::after{left:20px}
-/* STAGE */
 .stage{
   position:relative;background:var(--bg3);border:1px solid rgba(255,255,255,.06);
   border-radius:16px;padding:28px 28px 22px;min-height:320px;overflow:hidden;
 }
 .stage:focus{outline:none}
+.stage.dragover{outline:2px dashed var(--accent);outline-offset:-8px}
 .mode-desc{font-family:var(--sans);font-size:13px;color:var(--dim);margin:0 0 14px;line-height:1.5}
 .mode-desc b{color:var(--muted)}
+#vocab-card{
+  display:none;background:var(--card);border:1px solid rgba(122,162,247,.25);
+  border-radius:12px;padding:14px 16px;margin-bottom:16px;font-family:var(--sans);
+}
+#vocab-card.open{display:block}
+#vocab-card .vw{font-size:20px;font-weight:800;color:var(--accent)}
+#vocab-card .vd{font-size:14px;color:var(--fg);margin-top:4px;line-height:1.5}
+#vocab-card .vm{font-size:11px;color:var(--dim);margin-top:6px;letter-spacing:.5px}
+#recall-banner{
+  display:none;text-align:center;font-family:var(--sans);font-weight:800;font-size:15px;
+  color:var(--warn);background:rgba(224,175,104,.08);border:1px solid rgba(224,175,104,.35);
+  border-radius:10px;padding:10px;margin-bottom:14px;
+}
+#recall-banner.open{display:block}
+#recall-banner.recall{color:var(--accent);background:rgba(122,162,247,.08);border-color:rgba(122,162,247,.35)}
 #words{
   font-size:24px;line-height:2.1;letter-spacing:.3px;user-select:none;
-  filter:blur(0);transition:filter .2s;
 }
-#words.locked{filter:blur(6px)}
+#words.masked .char{visibility:hidden}
+#words.masked .char.correct{visibility:visible;color:var(--fg)}
+#words.masked .char.incorrect{visibility:visible;color:var(--err)}
 .word{display:inline-block;margin-right:14px;white-space:nowrap;position:relative}
 .word .char{color:var(--dim);position:relative;transition:color .08s}
 .word .char.correct{color:var(--fg)}
@@ -152,31 +171,8 @@ body.stop-active .stop-badge{display:block}
 #stop-flash{position:fixed;inset:0;border:6px solid var(--err);border-radius:18px;pointer-events:none;opacity:0;z-index:50}
 body.stop-active #stop-flash{opacity:1;animation:flash .4s infinite alternate}
 @keyframes flash{from{opacity:.4}to{opacity:1}}
-/* dictation + pasat */
-.center-box{display:none;text-align:center;padding:20px 0}
-.center-box.active{display:block}
-.big-digit{
-  font-size:84px;font-weight:900;line-height:1;color:var(--fg);
-}
-.prev-digit{font-size:15px;color:var(--dim)}
-.dict-mask{font-size:42px;letter-spacing:12px;color:var(--accent);margin:12px 0}
-.dict-input,.pasat-hint{
-  font-family:var(--mono);
-}
-.dict-input{
-  background:var(--bg2);border:2px solid var(--dim2);color:var(--fg);
-  font-size:22px;padding:12px 16px;border-radius:12px;width:min(420px,90%);text-align:center;outline:none;
-}
-.dict-input:focus{border-color:var(--accent)}
-.pasat-keys{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
-.pasat-keys button{
-  width:46px;height:46px;border-radius:10px;border:1px solid var(--dim2);
-  background:var(--bg2);color:var(--fg);font-size:18px;font-weight:800;cursor:pointer;font-family:var(--mono);
-}
-.pasat-keys button:hover{border-color:var(--accent);color:var(--accent)}
 .progressbar{height:6px;background:var(--bg2);border-radius:999px;overflow:hidden;margin-top:16px}
 .progressbar>div{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .2s}
-/* results */
 .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;place-items:center;padding:18px}
 .modal-backdrop.open{display:grid}
 .modal{background:var(--bg2);border:1px solid rgba(255,255,255,.08);border-radius:18px;max-width:720px;width:100%;padding:24px;max-height:90vh;overflow:auto}
@@ -191,8 +187,7 @@ body.stop-active #stop-flash{opacity:1;animation:flash .4s infinite alternate}
 .history table{width:100%;border-collapse:collapse;font-size:12px}
 .history th,.history td{padding:8px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left}
 .history th{color:var(--dim);font-family:var(--sans);font-size:11px;letter-spacing:1px}
-/* footer */
-footer{max-width:1100px;width:100%;margin:0 auto;padding:18px 22px 26px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--dim);font-size:12px}
+footer{max-width:1100px;width:100%;margin:0 auto;padding:18px 22px 26px;text-align:center;color:var(--dim);font-size:12px}
 kbd{background:var(--bg2);border:1px solid var(--dim2);border-bottom-width:2px;border-radius:6px;padding:1px 6px;font-size:11px}
 @media(max-width:760px){
   .hud{grid-template-columns:repeat(3,1fr)}
@@ -206,7 +201,7 @@ kbd{background:var(--bg2);border:1px solid var(--dim2);border-bottom-width:2px;b
 <div id="stop-flash"></div>
 
 <header>
-  <div class="logo"><div class="logo-mark">MB</div><div>MINDBUILD<small>COGNITIVE TRAINING</small></div></div>
+  <div class="logo"><div class="logo-mark">MC</div><div>Monkeytype CCT<small>COGNITIVE TRAINING</small></div></div>
   <nav id="topnav">
     <button data-goto="trainer" class="active">trainer</button>
     <button data-goto="results" id="nav-results">results</button>
@@ -214,28 +209,23 @@ kbd{background:var(--bg2);border:1px solid var(--dim2);border-bottom-width:2px;b
   </nav>
   <div class="header-spacer"></div>
   <button class="icon-btn" id="settings-toggle" title="Settings">⚙ settings</button>
-  <a class="discord-btn" href="https://discord.gg/brain" target="_blank" rel="noopener">💬 Discord · MINDBUILDING</a>
+  <a class="discord-btn" href="https://discord.gg/brain" target="_blank" rel="noopener">💬 Discord / MINDBUILDING</a>
 </header>
 
 <div class="wrap">
-  <div class="settings-panel" id="settings-panel">
-    <div class="set-row"><span>🔊 Sound FX</span><button class="switch on" id="sw-sound"></button></div>
-    <div class="set-row"><span>Smooth caret</span><button class="switch on" id="sw-caret"></button></div>
-    <div class="set-row"><span>Error chime</span><button class="switch on" id="sw-errchime"></button></div>
-    <div class="set-row"><span>Voice rate <span id="voice-rate-val">1.0</span></span><input type="range" id="voice-rate" min="0.6" max="1.6" step="0.1" value="1"></div>
-    <div class="set-row"><span>Stop-signal freq <span id="stop-freq-val">med</span></span><input type="range" id="stop-freq" min="0" max="2" step="1" value="1"></div>
-    <div class="set-row"><span>Blind / dictation hide text</span><button class="switch on" id="sw-blind"></button></div>
-  </div>
-
   <div class="controls">
     <div class="mode-tabs" id="mode-tabs">
-      <button data-mode="standard" class="active">1 · speed CCT</button>
+      <button data-mode="standard" class="active">1 · speed typing-CCT</button>
       <button data-mode="stop">2 · stop-signal ICT</button>
       <button data-mode="filter">3 · garbage filter</button>
-      <button data-mode="dictation">4 · dictation</button>
-      <button data-mode="pasat">5 · aPASAT</button>
+      <button data-mode="vocab">4 · VCI vocab</button>
+      <button data-mode="recall">5 · WM recall</button>
     </div>
     <div style="flex:1"></div>
+    <div class="pill-group" id="text-group" title="Text source">
+      <button data-text="random" class="active">random words</button>
+      <button data-text="vci">High VCI passages</button>
+    </div>
     <div class="pill-group" id="time-group">
       <button data-time="15">15s</button>
       <button data-time="30" class="active">30s</button>
@@ -245,6 +235,8 @@ kbd{background:var(--bg2);border:1px solid var(--dim2);border-bottom-width:2px;b
     <button class="btn ghost" id="btn-restart">↻ restart</button>
     <button class="btn" id="btn-start">▶ start</button>
   </div>
+
+  <div class="sub-controls" id="sub-controls"></div>
 
   <div class="hud">
     <div class="hud-card"><div class="label">WPM</div><div class="value" id="hud-wpm">0</div><div class="sub" id="hud-cpm">0 cpm</div></div>
@@ -258,28 +250,44 @@ kbd{background:var(--bg2);border:1px solid var(--dim2);border-bottom-width:2px;b
   <div class="stage" id="stage" tabindex="0">
     <div class="stop-badge">⛔ STOP — FREEZE</div>
     <p class="mode-desc" id="mode-desc"></p>
+    <div id="vocab-card"><div class="vw" id="vocab-word"></div><div class="vd" id="vocab-def"></div><div class="vm" id="vocab-meta"></div></div>
+    <div id="recall-banner"></div>
     <div id="words"></div>
     <div id="caret"></div>
-
-    <div class="center-box" id="dictation-box">
-      <div style="font-size:13px;color:var(--dim);font-family:var(--sans)">🔊 LISTEN &amp; TYPE — press <kbd>Enter</kbd> to submit · <kbd>R</kbd> replay</div>
-      <div class="dict-mask" id="dict-mask">••••</div>
-      <input class="dict-input" id="dict-input" placeholder="type what you heard…" autocomplete="off" autocapitalize="off" spellcheck="false" />
-      <div><button class="btn ghost" id="btn-replay" style="margin-top:12px">🔊 replay (R)</button></div>
-    </div>
-
-    <div class="center-box" id="pasat-box">
-      <div class="prev-digit" id="pasat-prev">previous: –</div>
-      <div class="big-digit" id="pasat-cur">–</div>
-      <div style="font-size:13px;color:var(--dim);font-family:var(--sans)">Add <b style="color:var(--muted)">current + previous</b>, type the <b style="color:var(--muted)">unit digit</b> (1-back)</div>
-      <div class="pasat-keys" id="pasat-keys"></div>
-      <div style="margin-top:8px;font-size:12px;color:var(--dim)" id="pasat-feedback">press 0–9 or click</div>
-    </div>
-
     <div class="progressbar"><div id="progress"></div></div>
     <div class="focus-hint" id="focus-hint">click here or press any key to focus</div>
   </div>
-  <p style="color:var(--dim);font-size:12px;font-family:var(--sans)">Shortcuts: <kbd>Tab</kbd> restart · <kbd>Esc</kbd> stop · <kbd>Enter</kbd> skip garbage (mode 3) / submit (mode 4)</p>
+  <p style="color:var(--dim);font-size:12px;font-family:var(--sans)">Shortcuts: <kbd>Tab</kbd> restart · <kbd>Esc</kbd> stop · <kbd>Enter</kbd>/<kbd>Space</kbd> skip garbage (mode 3 skip sub-mode)</p>
+</div>
+
+<div class="modal-backdrop" id="settings-modal">
+  <div class="modal">
+    <h2>⚙ Settings</h2>
+    <p class="sub">Audio, caret, text filters &amp; ISI parameters. Saved locally.</p>
+    <div class="set-group"><h4>AUDIO</h4>
+      <div class="set-row"><span>🔊 Sound FX</span><button class="switch on" id="sw-sound"></button></div>
+      <div class="set-row"><span>Error chime on mistype</span><button class="switch on" id="sw-errchime"></button></div>
+    </div>
+    <div class="set-group"><h4>CARET</h4>
+      <div class="set-row"><span>Smooth caret animation</span><button class="switch on" id="sw-caret"></button></div>
+    </div>
+    <div class="set-group"><h4>TEXT FILTERS</h4>
+      <div class="set-row"><span>Punctuation</span><button class="switch on" id="sw-punct"></button></div>
+      <div class="set-row"><span>Capitalization / Shift usage</span><button class="switch on" id="sw-caps"></button></div>
+      <div class="set-row"><span>Numbers</span><button class="switch on" id="sw-numbers"></button></div>
+      <div class="set-row"><span>Special symbols</span><button class="switch" id="sw-symbols"></button></div>
+    </div>
+    <div class="set-group"><h4>ISI &amp; TRAINING</h4>
+      <div class="set-row"><span>ISI floor <b id="isi-floor-val">350ms</b></span><input type="range" id="isi-floor" min="200" max="1000" step="50" value="350"></div>
+      <div class="set-row"><span>Stop-signal freq <b id="stop-freq-val">med</b></span><input type="range" id="stop-freq" min="0" max="2" step="1" value="1"></div>
+      <div class="set-row"><span>Garbage density <b id="garbage-val">25%</b></span><input type="range" id="garbage-density" min="0" max="100" step="5" value="25"></div>
+      <div class="set-row"><span>No-backspace / auto-advance</span><button class="switch" id="sw-noback"></button></div>
+      <div class="set-row"><span>WM preview time <b id="preview-val">3s</b></span><input type="range" id="preview-time" min="2" max="5" step="0.5" value="3"></div>
+    </div>
+    <div style="margin-top:14px;display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn" id="btn-close-settings">done</button>
+    </div>
+  </div>
 </div>
 
 <div class="modal-backdrop" id="results-modal">
@@ -305,100 +313,358 @@ kbd{background:var(--bg2);border:1px solid var(--dim2);border-bottom-width:2px;b
   </div>
 </div>
 
-<footer>
-  <span>MINDBUILD · CCT + ICT trainer · offline-first, no backend</span>
-  <span>Engineered by TURPENSTEIN</span>
-</footer>
+<footer>Engineered by TURPENSTEIN</footer>
 
 <script>
 (()=>{'use strict';
 const $=s=>document.querySelector(s);
-const WORDS=("the be to of and a in that have I it for not on with he as you do at this but his by from they we say her she or an will my one all would there their what so up out if about who get which go me when make can like time no just him know take people into year your good some could them see other than then now look only come its over think also back after use two how our work first well way even new want because any these give day most us is are had has were been has more will would there what about which when make like time just know take person into year your good some could them see other than then now look only come its over think also back after use two how our work first well way even new want because any these give day most us focus brain mind train fast quick calm sharp nerve learn think build slow deep clear swift quiet").split(/\s+/);
+const WORDS=("the be to of and a in that have I it for not on with he as you do at this but his by from they we say her she or an will my one all would there their what so up out if about who get which go me when make can like time no just him know take people into year your good some could them see other than then now look only come its over think also back after use two how our work first well way even new want because any these give day most us focus brain mind train fast quick calm sharp nerve learn think build slow deep clear swift quiet").split(/\s+/);
+const PUNCT=['.',',',';:',',','.','!','?'];
+const SYM_TOKENS=['#','@','%','&','*','+','=','@#','%&','#@','*&'];
+const PASSAGES=[
+ "The scientist formulated a precise hypothesis before conducting the experiment. Her results demonstrated a significant correlation between attention and memory retention.",
+ "Cognitive endurance develops through deliberate practice under gradually increasing difficulty. Consistent effort strengthens both processing speed and inhibitory control.",
+ "The dictionary defines perseverance as continued effort despite difficulty or delay in achieving success. Such persistence distinguishes mastery from mere competence.",
+ "Although the music proved challenging, the ensemble maintained impeccable rhythm. Each musician listened intently, adjusting tempo and dynamics in real time.",
+ "Effective reasoning requires distinguishing evidence from assumption. A coherent argument presents premises clearly, connects them logically, and anticipates objections.",
+ "The architect envisioned a structure that harmonized utility with elegance. Sunlight entered through tall windows, illuminating the spacious interior.",
+ "Memory consolidation occurs primarily during restful sleep. Neural pathways activated during learning are reactivated and strengthened overnight.",
+ "The philosopher argued that clarity of language produces clarity of thought. Ambiguous definitions, he warned, conceal confusion rather than resolve it.",
+ "Rapid technological change demands adaptable minds. Those who learn continuously can transfer skills across unfamiliar and evolving contexts.",
+ "The committee reviewed each proposal with meticulous care. Only the most rigorous methodology survived their systematic evaluation.",
+ "Verbal comprehension reflects the ability to grasp complex ideas expressed in words. Rich vocabulary and broad reading steadily expand this capacity.",
+ "Inhibition allows a person to suppress an automatic response in favor of a deliberate one. This capacity underlies patience, focus, and self-discipline."
+];
+/* Built-in VCI starter deck: word | definition | example */
+const VOCAB_RAW=[
+ ["Abate","Become less intense or widespread.","The storm suddenly abated before midnight."],
+ ["Aberration","A departure from what is normal or expected.","The snow in June was an aberration."],
+ ["Abrogate","Repeal or do away with a law or agreement.","The treaty was abrogated by mutual consent."],
+ ["Acumen","The ability to make good judgments quickly.","Her business acumen built the company."],
+ ["Adulation","Excessive admiration or praise.","The young star thrived on public adulation."],
+ ["Alacrity","Brisk and cheerful readiness.","She accepted the challenge with alacrity."],
+ ["Ambiguous","Open to more than one interpretation.","His ambiguous reply settled nothing."],
+ ["Ameliorate","Make something bad better.","The reforms ameliorated working conditions."],
+ ["Anachronism","Something out of its proper historical time.","The horse-drawn carriage felt like an anachronism."],
+ ["Antithesis","The direct opposite of something.","Chaos is the antithesis of order."],
+ ["Apathy","Lack of interest or concern.","Voter apathy decided the quiet election."],
+ ["Ardent","Enthusiastic or passionate.","He was an ardent supporter of the library."],
+ ["Ascetic","Severely self-disciplined, avoiding indulgence.","The monk led an ascetic life."],
+ ["Assiduous","Showing great care and perseverance.","Her assiduous study earned top marks."],
+ ["Austere","Severe or strict in manner.","The judge maintained an austere courtroom."],
+ ["Banal","So lacking in originality as to be boring.","The meeting was full of banal remarks."],
+ ["Bellicose","Demonstrating aggression; warlike.","The bellicose speech alarmed the diplomats."],
+ ["Benevolent","Well-meaning and kindly.","A benevolent donor funded the clinic."],
+ ["Cacophony","A harsh, discordant mixture of sounds.","The construction site produced a daily cacophony."],
+ ["Candid","Truthful and straightforward.","She gave a candid assessment of the risks."],
+ ["Capricious","Given to sudden changes of mood.","Capricious weather ruined our hiking plans."],
+ ["Censure","Express severe disapproval of.","The council voted to censure the mayor."],
+ ["Circumspect","Wary and unwilling to take risks.","Investors remained circumspect after the crash."],
+ ["Coalesce","Come together to form one mass.","The two movements coalesced into one party."],
+ ["Cogent","Clear, logical, and convincing.","He presented a cogent case for reform."],
+ ["Conundrum","A confusing and difficult problem.","The budget shortfall posed a real conundrum."],
+ ["Corroborate","Confirm or give support to.","Witnesses corroborated his entire account."],
+ ["Deference","Humble submission and respect.","Out of deference, she let him speak first."],
+ ["Delineate","Describe or portray precisely.","The report delineated each stage clearly."],
+ ["Demure","Reserved, modest, and shy.","Her demure smile charmed the guests."],
+ ["Deride","Express contempt for; ridicule.","Critics derided the proposal as fantasy."],
+ ["Desiccate","Remove the moisture from; dry out.","The drought desiccated the fertile fields."],
+ ["Diatribe","A forceful and bitter verbal attack.","His review read like an angry diatribe."],
+ ["Didactic","Intended to teach or instruct.","The novel had a didactic tone throughout."],
+ ["Disparate","Essentially different; distinct in kind.","They united disparate groups behind one goal."],
+ ["Dogmatic","Asserting opinions as if they were facts.","The dogmatic lecture allowed no questions."],
+ ["Ebullient","Cheerful and full of energy.","The ebullient crowd cheered every goal."],
+ ["Eclectic","Deriving ideas from many sources.","Her eclectic playlist surprised every guest."],
+ ["Efficacy","The ability to produce a desired result.","The trial confirmed the efficacy of the vaccine."],
+ ["Elegy","A mournful poem or song.","He wrote an elegy for his late mentor."],
+ ["Eloquent","Fluent and persuasive in speaking.","Her eloquent plea moved the entire jury."],
+ ["Emulate","Match or surpass by imitation.","Young athletes emulate their heroes daily."],
+ ["Enervate","Drain of energy or vitality.","The humid heat enervated the runners."],
+ ["Ephemeral","Lasting for a very short time.","Fame on the internet is often ephemeral."],
+ ["Equivocal","Open to multiple interpretations; vague.","The results of the poll were equivocal."],
+ ["Erudite","Having or showing great knowledge.","The erudite professor cited sources effortlessly."],
+ ["Esoteric","Intended for only a small knowledgeable circle.","The lecture covered esoteric mathematics."],
+ ["Eulogy","A speech praising someone who died.","She delivered a moving eulogy at the service."],
+ ["Euphemism","A mild word substituted for a harsh one.","They used a euphemism for the layoffs."],
+ ["Exacerbate","Make a problem worse.","Cutting funds will only exacerbate the crisis."],
+ ["Exculpate","Show or declare someone free from blame.","New evidence exculpated the accused clerk."],
+ ["Exigent","Pressing; demanding immediate action.","The exigent leak required instant repairs."],
+ ["Extol","Praise enthusiastically.","Teachers extolled her remarkable progress."],
+ ["Facetious","Treating serious issues with inappropriate humor.","His facetious comment broke the tension briefly."],
+ ["Fallacious","Based on a mistaken belief.","The fallacious rumor spread through the office."],
+ ["Fastidious","Very attentive to detail; hard to please.","The fastidious editor caught every typo."],
+ ["Fathom","Come to understand after thought.","Scientists struggle to fathom deep space."],
+ ["Fortuitous","Happening by lucky chance.","A fortuitous meeting launched her career."],
+ ["Garrulous","Excessively talkative.","The garrulous host entertained us for hours."],
+ ["Grandiloquent","Pompous or extravagant in language.","The grandiloquent speech bored the audience."],
+ ["Gregarious","Fond of company; sociable.","The gregarious bartender knew every regular."],
+ ["Hackneyed","Overused and lacking originality.","The essay relied on hackneyed phrases."],
+ ["Harangue","A lengthy aggressive speech.","The coach delivered a fiery harangue at halftime."],
+ ["Hedonist","A person devoted to pleasure.","The young hedonist chased every delight."],
+ ["Heresy","A belief contrary to orthodox doctrine.","His theories were condemned as heresy."],
+ ["Hyperbole","Exaggerated statements not meant literally.","Her claim of a million emails was pure hyperbole."],
+ ["Iconoclast","One who attacks cherished beliefs.","The young director was a cinematic iconoclast."],
+ ["Idiosyncrasy","A distinctive personal habit.","His only idiosyncrasy was stirring tea counterclockwise."],
+ ["Ignominious","Deserving public disgrace.","The team suffered an ignominious defeat."],
+ ["Immutable","Unchanging over time.","The laws of physics remain immutable."],
+ ["Impetuous","Acting quickly without thought.","His impetuous reply caused lasting regret."],
+ ["Inane","Silly; lacking sense.","The inane sitcom relied on cheap jokes."],
+ ["Incorrigible","Not able to be corrected.","The incorrigible prankster struck again."],
+ ["Indolent","Wanting to avoid activity; lazy.","The indolent cat slept through dinner."],
+ ["Ineffable","Too great for words.","The mountains inspired ineffable awe."],
+ ["Ingenuous","Innocent and unsuspecting.","Her ingenuous questions delighted the panel."],
+ ["Intrepid","Fearless and adventurous.","Intrepid climbers reached the summit at dawn."],
+ ["Laconic","Using very few words.","His laconic reply ended the debate."],
+ ["Lampoon","Publicly criticize with ridicule.","The cartoon lampooned city officials weekly."],
+ ["Laud","Praise highly.","Critics lauded the powerful finale."],
+ ["Lethargic","Sluggish and apathetic.","The humid afternoon left us lethargic."],
+ ["Loquacious","Talkative and fond of talking.","The loquacious guide narrated the whole trail."],
+ ["Lucid","Easy to understand; clear.","She gave a lucid summary of the findings."],
+ ["Magnanimous","Generous and forgiving.","The champion was magnanimous in victory."],
+ ["Malleable","Easily shaped or influenced.","Young minds are remarkably malleable."],
+ ["Maverick","An independent-minded person.","The maverick engineer ignored every convention."],
+ ["Mellifluous","Sweet-sounding and pleasant.","Her mellifluous voice filled the hall."],
+ ["Mendacious","Given to lying.","The mendacious ad misled thousands daily."],
+ ["Meticulous","Showing great attention to detail.","The meticulous audit found each error."],
+ ["Mitigate","Make less severe or painful.","Planting trees helps mitigate the heat."],
+ ["Mollify","Appease anger or anxiety.","A sincere apology mollified the critics."],
+ ["Mundane","Lacking excitement; ordinary.","She escaped mundane chores through novels."],
+ ["Nefarious","Wicked or criminal.","The gang hatched a nefarious scheme downtown."],
+ ["Neophyte","A beginner or novice.","The neophyte coder shipped her first app."],
+ ["Obdurate","Stubbornly refusing to change.","The obdurate landlord rejected every offer."],
+ ["Obfuscate","Render unclear or confusing.","Jargon only obfuscates the instructions further."],
+ ["Officious","Asserting authority intrusively.","The officious clerk demanded three forms."],
+ ["Onerous","Involving heavy obligations.","The onerous commute drained him daily."],
+ ["Opulent","Ostentatiously rich and luxurious.","The opulent hotel impressed every guest."],
+ ["Ostentatious","Designed to impress; showy.","His ostentatious car drew constant stares."],
+ ["Paragon","A perfect example of something.","She was regarded as a paragon of virtue."],
+ ["Pedantic","Excessively concerned with minor details.","The pedantic review listed each comma."],
+ ["Penchant","A strong habitual liking.","He had a penchant for spicy food."],
+ ["Perfidious","Deceitful and untrustworthy.","The perfidious ally leaked the plans."],
+ ["Philanthropy","The desire to promote others welfare.","Her philanthropy funded twelve schools."],
+ ["Placate","Make someone less angry.","A full refund placated the angry traveler."],
+ ["Pragmatic","Dealing with problems practically.","The mayor took a pragmatic approach daily."],
+ ["Precarious","Dangerously unstable.","The ladder stood in a precarious position."],
+ ["Prodigal","Wastefully extravagant.","The prodigal heir spent the fortune fast."],
+ ["Prolific","Producing abundant works.","The prolific author published yearly novels."],
+ ["Propensity","An inclination toward something.","His propensity for lateness annoyed everyone."],
+ ["Querulous","Complaining in a whining manner.","The querulous toddler refused every snack."],
+ ["Rancor","Bitter resentment.","Old rancor divided the two families."],
+ ["Recalcitrant","Resisting authority or control.","The recalcitrant mule blocked the path."],
+ ["Redundant","No longer needed or useful.","The manual made the old guide redundant."],
+ ["Refute","Prove a statement false.","Data refuted the alarming claim quickly."],
+ ["Reticent","Not revealing thoughts readily.","The reticent witness answered in monosyllables."],
+ ["Sagacious","Having good judgment; wise.","The sagacious elder settled the dispute."],
+ ["Salient","Most noticeable or important.","The report highlighted salient risks first."],
+ ["Soporific","Tending to induce drowsiness.","The soporific lecture emptied the hall."],
+ ["Spurious","Not genuine or true.","Spurious statistics corrupted the debate."],
+ ["Stoic","Enduring hardship without complaint.","The stoic nurse worked through the night."],
+ ["Subjugate","Bring under domination.","The empire sought to subjugate its neighbors."],
+ ["Superfluous","Unnecessary or excessive.","Cut every superfluous word from drafts."],
+ ["Surreptitious","Kept secret or stealthy.","They held a surreptitious meeting downtown."],
+ ["Taciturn","Reserved or uncommunicative.","The taciturn farmer nodded rather than spoke."],
+ ["Tenacious","Holding firmly to something.","Her tenacious defense saved the match."],
+ ["Tirade","A long angry speech.","The manager launched into a tirade about deadlines."],
+ ["Torpor","Mental and physical inactivity.","Winter torpor slowed the whole town."],
+ ["Transient","Lasting only a short time.","The transient storm passed by noon."],
+ ["Truculent","Eager to argue; hostile.","The truculent debater attacked every point."],
+ ["Ubiquitous","Present everywhere at once.","Smartphones have become truly ubiquitous."],
+ ["Umbrage","Offense or annoyance.","She took umbrage at the careless remark."],
+ ["Unctuous","Excessively flattering or oily.","The unctuous salesman praised every customer."],
+ ["Venerate","Regard with great respect.","Citizens venerate the founding charter."],
+ ["Veracity","Conformity to truth.","Reporters questioned the veracity of the leak."],
+ ["Verbose","Using more words than needed.","His verbose email buried the request."],
+ ["Vex","Make someone annoyed or worried.","Delays vex commuters every morning."],
+ ["Vigilant","Keeping careful watch.","Guards remained vigilant through the night."],
+ ["Vilify","Speak abusively about.","Rivals vilified the candidate for weeks."],
+ ["Virtuoso","Highly skilled performer.","The young virtuoso stunned the judges."],
+ ["Vitriolic","Filled with bitter criticism.","The vitriolic column sparked outrage online."],
+ ["Vociferous","Vehement and noisy.","Vociferous fans demanded an encore nightly."],
+ ["Voluminous","Very large in volume.","The voluminous report spanned nine binders."],
+ ["Wanton","Deliberate and unprovoked.","The city condemned the wanton destruction."],
+ ["Zenith","The highest point of achievement.","At her zenith she won every major prize."]
+];
 const DESCS={
- standard:"<b>Mode 1 · Speed & Accuracy CCT.</b> Type the stream as fast and accurately as possible. Any mistyped key fires an instant error chime (response-inhibition feedback). Streaks speed up the target ISI; errors slow it down.",
+ standard:"<b>Mode 1 · Speed Typing-CCT.</b> Type the stream as fast and accurately as possible. Any mistyped key fires an instant error chime (response-inhibition feedback). Streaks speed up the target ISI; errors slow it down.",
  stop:"<b>Mode 2 · Stop-Signal / Go-No-Go ICT.</b> Type normally, but when the screen flashes <b>red + STOP badge + chime</b>, FREEZE immediately until it clears (~1.2s). Any key during STOP = loud penalty beep + failure.",
- filter:"<b>Mode 3 · Garbage / Pseudo-Word Filter.</b> Real words + <b>pseudo-words</b> (thrk, 9x#a, zqorp). Type real words normally. When you reach a <b>red wavy token, press ENTER to filter/skip it</b>. Typing its letters = error.",
- dictation:"<b>Mode 4 · Spoken / Dictation CCT.</b> No full text — <b>listen</b> via speechSynthesis, then type what you heard and press <b>Enter</b>. Pacing (ISI) adapts: fast streaks shorten the gap between dictations.",
- pasat:"<b>Mode 5 · Arithmetic aPASAT (1-back).</b> Digits appear (and are spoken). For each new digit compute <b>(current + previous) % 10</b> and press that digit fast, before the ISI expires."
+ filter:"<b>Mode 3 · Garbage &amp; Nonsense Filter.</b> Real words mixed with pseudo-words (thrk, 9x#a). <b>Skip:</b> press <b>Enter/Space</b> to inhibit and skip. <b>Decode:</b> you must type the pseudo-word out, breaking muscle-memory chunking.",
+ vocab:"<b>Mode 4 · VCI Vocabulary &amp; Anki Deck.</b> The card header shows the <b>target word + definition</b>; type the <b>example sentence</b>. Drop your <b>.apkg</b> deck onto the stage (or use Upload) to train your own cards — parsed fully client-side.",
+ recall:"<b>Mode 5 · Working Memory Recall.</b> Memorize the passage during the <b>preview window</b>, then it fades out completely — type it back <b>from memory</b>. Any key during preview skips to recall."
 };
+let vciCursor=0, recallCursor=0;
+const DEFAULTS={sound:true,errChime:true,smoothCaret:true,punct:true,caps:true,numbers:true,symbols:false,garbage:25,noBackspace:false,isiFloor:350,stopFreq:1,preview:3};
+function loadSettings(){
+ let s={};
+ try{ s=JSON.parse(localStorage.getItem('mindbuild_settings')||'{}'); }catch(e){ s={}; }
+ return Object.assign({},DEFAULTS,s);
+}
+function saveSettings(){ try{ localStorage.setItem('mindbuild_settings',JSON.stringify(state.settings)); }catch(e){} }
 const state={
- mode:'standard', duration:30, timeLeft:30, running:false, finished:false,
+ mode:'standard', textSource:'random', filterMode:'skip', duration:30, timeLeft:30, running:false, finished:false,
  words:[], wi:0, ci:0, startT:0, lastT:0,
  keys:0, correct:0, errors:0, stopFails:0,
  rts:[], streak:0, best:0, streaks5:0, inStreak5:false,
  isi:2000, minIsi:2000, recent:[], consecErr:0,
- stopActive:false, stopTimer:null, stopSchedule:null,
- dict:{queue:[],idx:0,t0:0,replays:0},
- pasat:{prev:null,cur:null,t0:0,timeout:null,answered:true},
+ stopActive:false, stopTimer:null, stopSchedule:null, previewTimer:null,
+ recallPhase:'idle',
+ vocab:{name:'built-in starter deck',cards:[],bounds:[]},
  recovery:{afterErr:0,need:0,recovered:0},
- settings:{sound:true,errChime:true,smoothCaret:true,voiceRate:1,stopFreq:1,blind:true}
+ settings:loadSettings()
 };
-// AUDIO
+/* AUDIO — Web Audio synth, zero MP3s */
 let AC=null;
 function ac(){ if(!AC){ try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){} } if(AC&&AC.state==='suspended')AC.resume(); return AC; }
-function tone(freq,dur=0.12,type='square',vol=0.12,when=0){
+function tone(freq,dur,type,vol,when){
+ dur=dur||0.12; type=type||'square'; vol=vol||0.12; when=when||0;
  if(!state.settings.sound) return; const c=ac(); if(!c) return;
- const o=c.createOscillator(),g=c.createGain(); o.type=type;o.frequency.value=freq;
+ const o=c.createOscillator(),g=c.createGain(); o.type=type; o.frequency.value=freq;
  g.gain.setValueAtTime(vol,c.currentTime+when); g.gain.exponentialRampToValueAtTime(0.0001,c.currentTime+when+dur);
- o.connect(g).connect(c.destination); o.start(c.currentTime+when); o.stop(c.currentTime+when+dur+0.02);
+ o.connect(g); g.connect(c.destination); o.start(c.currentTime+when); o.stop(c.currentTime+when+dur+0.02);
 }
-const playError=()=>{ if(state.settings.errChime){tone(160,0.18,'sawtooth',0.16); tone(110,0.2,'sawtooth',0.14,0.02);} };
-const playPenalty=()=>{ tone(90,0.4,'sawtooth',0.22); tone(70,0.45,'square',0.2,0.05); };
-const playStopCue=()=>{ tone(880,0.12,'sine',0.18); tone(660,0.15,'sine',0.18,0.12); };
-const playSuccess=()=>{ tone(660,0.06,'sine',0.07); };
-const playTick=()=>{ tone(440,0.04,'sine',0.05); };
-function speak(text){
- try{
-  window.speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(String(text));
-  u.rate=state.settings.voiceRate; u.pitch=1;
-  window.speechSynthesis.speak(u);
- }catch(e){}
-}
-// WORD GEN
+const playError=function(){ if(state.settings.errChime){ tone(160,0.18,'sawtooth',0.16); tone(110,0.2,'sawtooth',0.14,0.02); } };
+const playPenalty=function(){ tone(90,0.4,'sawtooth',0.22); tone(70,0.45,'square',0.2,0.05); };
+const playStopCue=function(){ tone(880,0.12,'sine',0.18); tone(660,0.15,'sine',0.18,0.12); };
+const playSuccess=function(){ tone(660,0.06,'sine',0.07); };
+const playTick=function(){ tone(440,0.04,'sine',0.05); };
+/* TEXT PIPELINE — toggles: punctuation / caps / numbers / symbols */
 function randWord(){ return WORDS[Math.floor(Math.random()*WORDS.length)]; }
 function pseudoWord(){
  const kinds=Math.random();
- if(kinds<0.4){ const c='bcdfghjklmnpqrstvwxyz',v='aeiou'; let s=''; const n=3+Math.floor(Math.random()*3);
+ if(kinds<0.5){ const c='bcdfghjklmnpqrstvwxyz',v='aeiou'; let s=''; const n=3+Math.floor(Math.random()*3);
   for(let i=0;i<n;i++) s+=(i%2? v[Math.floor(Math.random()*v.length)] : c[Math.floor(Math.random()*c.length)]); return s; }
- if(kinds<0.7){ let s=''; const pool='abcdefghijklmnopqrstuvwxyz0123456789'; const n=3+Math.floor(Math.random()*3);
+ if(kinds<0.8){ let s=''; const pool='abcdefghijklmnopqrstuvwxyz'; const n=3+Math.floor(Math.random()*3);
   for(let i=0;i<n;i++) s+=pool[Math.floor(Math.random()*pool.length)]; return s; }
- const sym=['#','@','%','*','9','7','x','z','q']; let s=''; const n=4+Math.floor(Math.random()*2);
- for(let i=0;i<n;i++) s+=sym[Math.floor(Math.random()*sym.length)]; return s;
+ let s=''; const pool='abcdefghijklmnopqrstuvwxyz0123456789#@%x'; const n=4+Math.floor(Math.random()*2);
+ for(let i=0;i<n;i++) s+=pool[Math.floor(Math.random()*pool.length)]; return s;
 }
-function buildWords(){
- const arr=[]; const N=80;
- for(let i=0;i<N;i++){
-  if(state.mode==='filter' && Math.random()<0.28) arr.push({t:pseudoWord(),garbage:true});
-  else if(state.mode==='standard'||state.mode==='stop'){
-   if(Math.random()<0.12) arr.push({t:String(Math.floor(Math.random()*100)),garbage:false});
-   else arr.push({t:randWord(),garbage:false});
-  }
-  else arr.push({t:randWord(),garbage:false});
+function vciWords(n){
+ const out=[];
+ while(out.length<n){
+  const p=PASSAGES[vciCursor%PASSAGES.length]; vciCursor++;
+  const toks=p.split(/\s+/);
+  for(let i=0;i<toks.length;i++) if(toks[i]) out.push(toks[i]);
+ }
+ return out.slice(0,n);
+}
+function stripPunct(t){ return t.replace(/[.,;:!?'"()\-–—]/g,''); }
+function transformToken(t){
+ const s=state.settings;
+ if(!s.punct) t=stripPunct(t);
+ if(!s.caps) t=t.toLowerCase();
+ return t;
+}
+function randomStream(n){
+ const seq=(state.textSource==='vci')? vciWords(n) : null;
+ const arr=[];
+ for(let i=0;i<n;i++){
+  let t=seq? seq[i] : randWord();
+  const s=state.settings;
+  if(!seq && s.caps && Math.random()<0.15) t=t.charAt(0).toUpperCase()+t.slice(1);
+  if(!seq && s.punct && Math.random()<0.22) t+=PUNCT[Math.floor(Math.random()*PUNCT.length)];
+  t=transformToken(t);
+  if(!t) t=randWord();
+  arr.push({t:t,garbage:false});
  }
  return arr;
 }
-// RENDER
+function injectSpecials(arr){
+ const s=state.settings;
+ for(let i=arr.length-1;i>=0;i--){
+  const r=Math.random();
+  if(s.numbers && r<0.08){ arr.splice(i+1,0,{t:String(Math.floor(Math.random()*100)),garbage:false}); }
+  else if(s.symbols && r<0.13){ arr.splice(i+1,0,{t:SYM_TOKENS[Math.floor(Math.random()*SYM_TOKENS.length)],garbage:false}); }
+ }
+ return arr;
+}
+function buildStream(n){
+ let arr=randomStream(n);
+ if(state.mode==='filter'){
+  const p=state.settings.garbage/100;
+  for(let i=0;i<arr.length;i++) if(Math.random()<p) arr[i]={t:pseudoWord(),garbage:true};
+ }
+ return injectSpecials(arr);
+}
+/* VOCAB MODE */
+function builtinCards(){ return VOCAB_RAW.map(function(r){ return {word:r[0],def:r[1],ex:r[2]}; }); }
+function setDeck(name,cards){
+ cards=cards.filter(function(c){ return c && c.word && (c.ex||c.def); });
+ if(!cards.length) return false;
+ state.vocab={name:name,cards:cards,bounds:[]};
+ return true;
+}
+function vocabTokens(card){
+ let src=card.ex||(card.word+': '+card.def);
+ src=src.replace(/^["“”]+|["“”]+$/g,'');
+ if(!state.settings.caps) src=src.toLowerCase();
+ if(!state.settings.punct) src=src.split(/\s+/).map(stripPunct).join(' ');
+ return src.split(/\s+/).filter(Boolean);
+}
+function fillVocab(minTokens){
+ let guard=0;
+ while(state.vocab.bounds.reduce(function(a,b){return a+b.count;},0)<minTokens && guard<40){
+  guard++;
+  const card=state.vocab.cards[state.vocab.bounds.length%state.vocab.cards.length];
+  const toks=vocabTokens(card);
+  if(!toks.length) continue;
+  const start=state.words.length;
+  for(let i=0;i<toks.length;i++) state.words.push({t:toks[i],garbage:false});
+  state.vocab.bounds.push({start:start,count:toks.length,card:card});
+ }
+}
+function currentVocabCard(){
+ const b=state.vocab.bounds;
+ let cur=b[0];
+ for(let i=0;i<b.length;i++) if(b[i].start<=state.wi) cur=b[i];
+ return cur? cur.card : null;
+}
+function updateVocabHeader(){
+ const card=currentVocabCard(); if(!card) return;
+ $('#vocab-word').textContent=card.word;
+ $('#vocab-def').textContent=card.def||'';
+ const total=state.vocab.cards.length;
+ const seen=state.vocab.bounds.length;
+ $('#vocab-meta').textContent='card '+Math.min(state.wi+1,seen)+' of session · deck: '+state.vocab.name+' ('+total+' cards)';
+}
+function ensureVocab(){
+ if(state.wi>=state.words.length-12) fillVocab(state.words.length+40);
+ updateVocabHeader();
+}
+/* RECALL MODE */
+function buildRecall(){
+ let toks;
+ if(state.textSource==='vci'){
+  const p=PASSAGES[recallCursor%PASSAGES.length]; recallCursor++;
+  toks=p.split(/\s+/).filter(Boolean);
+ } else {
+  toks=[];
+  for(let i=0;i<16;i++) toks.push(randWord());
+ }
+ const s=state.settings;
+ toks=toks.map(function(t){ t=transformToken(t); return t||randWord(); });
+ return toks.map(function(t){ return {t:t,garbage:false}; });
+}
+/* RENDER */
 const wordsEl=$('#words'), caretEl=$('#caret'), stageEl=$('#stage');
 function renderWords(){
  wordsEl.innerHTML='';
- state.words.forEach((w,wi)=>{
-  const d=document.createElement('span'); d.className='word'+(w.garbage?' garbage':'')+(wi===state.wi?' current':'')+(w.skipped?' skipped':'');
-  [...w.t].forEach((ch,ci)=>{
-   const s=document.createElement('span'); s.className='char';
-   if(wi<state.wi || (wi===state.wi&&ci<state.ci&&!w.garbage)){}
-   s.textContent=ch; d.appendChild(s);
+ state.words.forEach(function(w,wi){
+  const d=document.createElement('span');
+  d.className='word'+(w.garbage?' garbage':'')+(wi===state.wi?' current':'')+(w.skipped?' skipped':'');
+  const chars=Array.prototype.slice.call(w.t);
+  chars.forEach(function(ch){
+   const s=document.createElement('span'); s.className='char'; s.textContent=ch; d.appendChild(s);
   });
-  // paint typed states
   if(w.typed){
-   [...d.children].forEach((s,ci)=>{
+   const kids=d.children;
+   for(let ci=0;ci<kids.length;ci++){
     const tc=w.typed[ci];
-    if(tc===undefined) return;
-    s.classList.add(tc?'correct':'incorrect');
-   });
+    if(tc===undefined) continue;
+    kids[ci].classList.add(tc?'correct':'incorrect');
+   }
   }
   wordsEl.appendChild(d);
  });
+ if(state.mode==='vocab') updateVocabHeader();
  updateCaret();
 }
 function updateCaret(){
@@ -407,7 +673,7 @@ function updateCaret(){
  if(cur){
   const chars=cur.children;
   const target=chars[Math.min(state.ci,chars.length-1)];
-  const sr=stageEl.getBoundingClientRect(), wr=wordsEl.getBoundingClientRect();
+  const sr=stageEl.getBoundingClientRect();
   if(state.ci>=chars.length){
    const r=cur.getBoundingClientRect();
    x=r.right-sr.left+4; y=r.top-sr.top+10;
@@ -419,17 +685,16 @@ function updateCaret(){
  caretEl.style.left=x+'px'; caretEl.style.top=y+'px';
  caretEl.classList.toggle('smooth',state.settings.smoothCaret);
 }
-// HUD
-function fmtISI(v){ return Math.round(v); }
+/* HUD */
 function updateHUD(){
  const mins=(Date.now()-state.startT)/60000;
- const wpm=state.running||state.finished ? Math.round(((state.correct/5)||0)/Math.max(mins,1/600)) : 0;
- $('#hud-wpm').textContent=state.running||state.finished?wpm:0;
+ const wpm=(state.running||state.finished)? Math.round(((state.correct/5)||0)/Math.max(mins,1/600)) : 0;
+ $('#hud-wpm').textContent=(state.running||state.finished)? wpm : 0;
  $('#hud-cpm').textContent=Math.round(wpm*5)+' cpm';
- const acc=state.keys? (100*state.correct/state.keys):100;
+ const acc=state.keys? (100*state.correct/state.keys) : 100;
  $('#hud-acc').textContent=acc.toFixed(1)+'%';
  $('#hud-acc-sub').textContent=state.correct+' / '+state.keys+' keys';
- $('#hud-isi').innerHTML=fmtISI(state.isi)+'<span style="font-size:12px">ms</span>';
+ $('#hud-isi').innerHTML=Math.round(state.isi)+'<span style="font-size:12px">ms</span>';
  $('#hud-err').textContent=state.errors+(state.stopFails? ' (+'+state.stopFails+' stop)':'');
  $('#hud-time').textContent=Math.ceil(state.timeLeft);
  $('#hud-streak').textContent=state.streak;
@@ -438,103 +703,161 @@ function updateHUD(){
  const p=1-state.timeLeft/state.duration;
  $('#progress').style.width=(Math.max(0,Math.min(1,p))*100)+'%';
 }
-// ADAPTIVE STAIRCASE — target 50–80% tension band
+/* ADAPTIVE STAIRCASE — 50–80% tension band, configurable floor */
 function adapt(correct){
  state.recent.push(correct?1:0); if(state.recent.length>12) state.recent.shift();
  if(correct){ state.streak++; state.best=Math.max(state.best,state.streak); state.consecErr=0;
   if(state.streak>=5 && !state.inStreak5){ state.streaks5++; state.inStreak5=true; }
   playSuccess();
  } else { state.errors++; state.streak=0; state.inStreak5=false; state.consecErr++;
-  // recovery tracking: need next 3 correct
   state.recovery.need=3; state.recovery.afterErr=0;
  }
  if(state.recovery.need>0){
   if(correct){ state.recovery.afterErr++; if(state.recovery.afterErr>=3){ state.recovery.recovered++; state.recovery.need=0; } }
   else { state.recovery.afterErr=0; }
  }
- const acc=state.recent.length? state.recent.reduce((a,b)=>a+b,0)/state.recent.length : 1;
- if(acc>0.8 || state.streak>=5) state.isi*= (state.streak>=8?0.90:0.94);
+ const acc=state.recent.length? state.recent.reduce(function(a,b){return a+b;},0)/state.recent.length : 1;
+ if(acc>0.8 || state.streak>=5) state.isi*=(state.streak>=8?0.90:0.94);
  else if(acc<0.5 || state.consecErr>=3) state.isi*=1.14;
  else state.isi*=0.985;
- const lo=state.mode==='pasat'||state.mode==='dictation'?600:350;
- state.isi=Math.max(lo,Math.min(5000,state.isi));
+ state.isi=Math.max(state.settings.isiFloor,Math.min(5000,state.isi));
  state.minIsi=Math.min(state.minIsi,state.isi);
  updateHUD();
 }
-// STOP SIGNAL (Mode 2)
+/* STOP SIGNAL (Mode 2) */
 function scheduleStop(){
  clearTimeout(state.stopSchedule);
  if(state.mode!=='stop'||!state.running) return;
  const base=[9000,6000,3500][state.settings.stopFreq];
- const jitter=base*0.5*Math.random();
- state.stopSchedule=setTimeout(fireStop, base+jitter);
+ state.stopSchedule=setTimeout(fireStop, base+base*0.5*Math.random());
 }
 function fireStop(){
  if(!state.running||state.mode!=='stop') return;
  state.stopActive=true; document.body.classList.add('stop-active');
  playStopCue();
- state.stopTimer=setTimeout(()=>{
+ state.stopTimer=setTimeout(function(){
   state.stopActive=false; document.body.classList.remove('stop-active');
   scheduleStop();
  },1200);
 }
-// SESSION FLOW
+/* SESSION FLOW */
 let tickInt=null;
+function modeLabel(){
+ if(state.mode==='vocab') return 'vocab/'+state.vocab.name;
+ return state.mode+'/'+state.textSource;
+}
 function setMode(m){
  state.mode=m;
- document.querySelectorAll('#mode-tabs button').forEach(b=>b.classList.toggle('active',b.dataset.mode===m));
+ const tabs=document.querySelectorAll('#mode-tabs button');
+ for(let i=0;i<tabs.length;i++) tabs[i].classList.toggle('active',tabs[i].getAttribute('data-mode')===m);
  $('#mode-desc').innerHTML=DESCS[m];
- $('#dictation-box').classList.toggle('active',m==='dictation');
- $('#pasat-box').classList.toggle('active',m==='pasat');
- wordsEl.style.display=(m==='dictation'||m==='pasat')?'none':'block';
- caretEl.style.display=(m==='dictation'||m==='pasat')?'none':'block';
+ $('#text-group').style.display=(m==='vocab')?'none':'flex';
+ $('#vocab-card').classList.toggle('open',m==='vocab');
+ renderSubBar();
  reset();
+}
+function renderSubBar(){
+ const bar=$('#sub-controls');
+ let html='';
+ if(state.mode==='filter'){
+  html+='<span>garbage:</span><div class="pill-group"><button data-fm="skip"'+(state.filterMode==='skip'?' class="active"':'')+'>skip (Enter/Space)</button><button data-fm="decode"'+(state.filterMode==='decode'?' class="active"':'')+'>decode (type it)</button></div>';
+  html+='<span>density <b class="js-garbage-val">'+state.settings.garbage+'%</b></span><input type="range" class="js-garbage" min="0" max="100" step="5" value="'+state.settings.garbage+'" style="width:130px">';
+ } else if(state.mode==='vocab'){
+  html+='<button class="btn small" id="btn-upload">⬆ upload .apkg</button><input type="file" id="apkg-file" accept=".apkg" style="display:none">';
+  html+='<span id="deck-info"></span><span style="color:var(--dim)">or drag &amp; drop the file onto the stage</span>';
+ } else if(state.mode==='recall'){
+  html+='<span>preview <b class="js-preview-val">'+state.settings.preview+'s</b></span><input type="range" class="js-preview" min="2" max="5" step="0.5" value="'+state.settings.preview+'" style="width:130px">';
+ }
+ bar.innerHTML=html;
+ bar.classList.toggle('open',!!html);
+ const fm=bar.querySelectorAll('[data-fm]');
+ for(let i=0;i<fm.length;i++) fm[i].onclick=function(){ state.filterMode=this.getAttribute('data-fm'); renderSubBar(); reset(); };
+ const up=$('#btn-upload'), fi=$('#apkg-file');
+ if(up&&fi){ up.onclick=function(){ fi.click(); }; fi.onchange=function(){ if(fi.files.length) importApkg(fi.files[0]); fi.value=''; }; }
+ updateDeckInfo();
+}
+function updateDeckInfo(){
+ const el=$('#deck-info');
+ if(el) el.textContent='deck: '+state.vocab.name+' ('+state.vocab.cards.length+' cards)';
 }
 function reset(){
  stopTimers();
  state.running=false; state.finished=false;
- state.timeLeft=state.duration; state.words=buildWords();
+ state.timeLeft=state.duration;
  state.wi=0; state.ci=0; state.keys=0; state.correct=0; state.errors=0; state.stopFails=0;
  state.rts=[]; state.streak=0; state.best=0; state.streaks5=0; state.inStreak5=false;
- state.isi=state.mode==='pasat'||state.mode==='dictation'?2500:2000;
- state.minIsi=state.isi; state.recent=[]; state.consecErr=0;
+ state.isi=2000; state.minIsi=state.isi; state.recent=[]; state.consecErr=0;
  state.recovery={afterErr:0,need:0,recovered:0};
- state.dict={queue:Array.from({length:60},()=>Math.random()<0.3?String(Math.floor(Math.random()*100)):randWord()),idx:0,t0:0,replays:0};
- state.pasat={prev:null,cur:null,t0:0,timeout:null,answered:true};
+ state.recallPhase='idle';
  document.body.classList.remove('stop-active'); state.stopActive=false;
- $('#dict-input').value='';
+ wordsEl.classList.remove('masked');
+ const banner=$('#recall-banner'); banner.classList.remove('open','recall'); banner.textContent='';
+ if(state.mode==='vocab'){ state.words=[]; state.vocab.bounds=[]; fillVocab(40); }
+ else if(state.mode==='recall'){ state.words=buildRecall(); }
+ else { state.words=buildStream(80); }
  $('#mode-desc').innerHTML=DESCS[state.mode];
- if(state.mode==='dictation'){ nextDictWord(true); }
- if(state.mode==='pasat'){ nextPasat(true); }
  renderWords(); updateHUD();
  $('#btn-start').disabled=false; $('#btn-start').textContent='▶ start';
 }
-function start(){
- if(state.running) return;
- ac(); try{window.speechSynthesis.cancel();}catch(e){}
- reset();
- state.running=true; state.startT=Date.now(); state.lastT=Date.now();
- $('#btn-start').disabled=true; $('#btn-start').textContent='● running…';
- stageEl.classList.remove('unfocused');
- if(state.mode==='stop') scheduleStop();
- if(state.mode==='pasat') nextPasat(true);
- if(state.mode==='dictation'){ state.dict.t0=Date.now(); }
+function startClock(){
  clearInterval(tickInt);
- tickInt=setInterval(()=>{
+ tickInt=setInterval(function(){
   state.timeLeft-=0.1;
   if(state.timeLeft<=0){ state.timeLeft=0; updateHUD(); finish(); return; }
   updateHUD();
  },100);
+}
+function start(){
+ if(state.running) return;
+ ac();
+ reset();
+ state.running=true;
+ $('#btn-start').disabled=true; $('#btn-start').textContent='● running…';
+ stageEl.classList.remove('unfocused');
+ if(state.mode==='stop') scheduleStop();
+ if(state.mode==='recall'){ startPreview(); return; }
+ state.startT=Date.now(); state.lastT=Date.now();
+ startClock();
  stageEl.focus();
  updateHUD();
 }
-function stopTimers(){ clearInterval(tickInt); clearTimeout(state.stopSchedule); clearTimeout(state.stopTimer); clearTimeout(state.pasat.timeout); }
+function startPreview(){
+ state.recallPhase='preview';
+ state.startT=Date.now(); state.lastT=Date.now();
+ const banner=$('#recall-banner');
+ banner.classList.add('open'); banner.classList.remove('recall');
+ let remain=state.settings.preview;
+ banner.textContent='👁 memorize — '+remain.toFixed(1)+'s (any key skips)';
+ updateHUD();
+ clearInterval(state.previewTimer);
+ state.previewTimer=setInterval(function(){
+  remain-=0.1;
+  if(remain<=0){ endPreview(); return; }
+  banner.textContent='👁 memorize — '+remain.toFixed(1)+'s (any key skips)';
+ },100);
+ stageEl.focus();
+}
+function endPreview(){
+ if(state.recallPhase!=='preview') return;
+ clearInterval(state.previewTimer);
+ state.recallPhase='recall';
+ wordsEl.classList.add('masked');
+ renderWords();
+ const banner=$('#recall-banner');
+ banner.classList.add('recall');
+ banner.textContent='🧠 type the passage from memory';
+ state.startT=Date.now(); state.lastT=Date.now();
+ startClock();
+ stageEl.focus();
+ updateHUD();
+}
+function stopTimers(){ clearInterval(tickInt); clearTimeout(state.stopSchedule); clearTimeout(state.stopTimer); clearInterval(state.previewTimer); }
 function finish(){
  if(state.finished) return;
  state.finished=true; state.running=false; stopTimers();
  document.body.classList.remove('stop-active'); state.stopActive=false;
- try{window.speechSynthesis.cancel();}catch(e){}
- updateHUD(); showResults(); saveHistory();
+ wordsEl.classList.remove('masked');
+ renderWords(); updateHUD(); showResults(); saveHistory();
  $('#btn-start').disabled=false; $('#btn-start').textContent='▶ start';
 }
 function stats(){
@@ -542,61 +865,60 @@ function stats(){
  const wpm=Math.round(((state.correct/5)||0)/mins);
  const cpm=wpm*5;
  const acc=state.keys?100*state.correct/state.keys:100;
- const avgRt=state.rts.length? Math.round(state.rts.reduce((a,b)=>a+b,0)/state.rts.length):0;
+ const avgRt=state.rts.length? Math.round(state.rts.reduce(function(a,b){return a+b;},0)/state.rts.length):0;
  const recRate=state.errors? 100*state.recovery.recovered/state.errors : 100;
- return {wpm,cpm,acc,avgRt,recRate};
+ return {wpm:wpm,cpm:cpm,acc:acc,avgRt:avgRt,recRate:recRate};
 }
-// RESULTS + HISTORY
+/* RESULTS + HISTORY */
 function showResults(){
  const s=stats();
- $('#res-sub').textContent=new Date().toLocaleString()+' · mode '+state.mode+' · '+state.duration+'s · min ISI '+Math.round(state.minIsi)+'ms';
+ $('#res-sub').textContent=new Date().toLocaleString()+' · '+modeLabel()+' · '+state.duration+'s · min ISI '+Math.round(state.minIsi)+'ms';
  $('#r-wpm').textContent=s.wpm+' / '+s.cpm;
  $('#r-acc').textContent=s.acc.toFixed(1)+'%';
  $('#r-rt').textContent=s.avgRt+' ms';
  $('#r-isi').textContent=Math.round(state.minIsi)+' ms';
- $('#r-rec').textContent=(state.errors?s.recRate.toFixed(0):'100')+'%';
+ $('#r-rec').textContent=(state.errors? s.recRate.toFixed(0) : '100')+'%';
  $('#r-streak').textContent=state.streaks5+' (best '+state.best+')';
  renderHistory();
  $('#results-modal').classList.add('open');
 }
-function getHist(){ try{return JSON.parse(localStorage.getItem('mindbuild_history')||'[]');}catch(e){return[];} }
+function getHist(){ try{ return JSON.parse(localStorage.getItem('mindbuild_history')||'[]'); }catch(e){ return []; } }
 function saveHistory(){
  const s=stats(); const h=getHist();
- h.unshift({d:new Date().toISOString(),mode:state.mode,dur:state.duration,wpm:s.wpm,acc:+s.acc.toFixed(1),rt:s.avgRt,isi:Math.round(state.minIsi)});
- localStorage.setItem('mindbuild_history',JSON.stringify(h.slice(0,50)));
+ h.unshift({d:new Date().toISOString(),mode:modeLabel(),dur:state.duration,wpm:s.wpm,acc:+s.acc.toFixed(1),rt:s.avgRt,isi:Math.round(state.minIsi)});
+ try{ localStorage.setItem('mindbuild_history',JSON.stringify(h.slice(0,50))); }catch(e){}
 }
 function renderHistory(){
  const h=getHist(); const tb=$('#history-body'); tb.innerHTML='';
- h.slice(0,20).forEach(r=>{
+ h.slice(0,20).forEach(function(r){
   const tr=document.createElement('tr');
   tr.innerHTML='<td>'+String(r.d).slice(0,16).replace('T',' ')+'</td><td>'+r.mode+'</td><td>'+r.wpm+'</td><td>'+r.acc+'%</td><td>'+r.rt+'ms</td><td>'+r.isi+'ms</td>';
   tb.appendChild(tr);
  });
  if(!h.length) tb.innerHTML='<tr><td colspan="6" style="color:var(--dim)">no sessions yet</td></tr>';
 }
-// TYPING CORE (modes 1-3)
+/* TYPING CORE */
+function isGarbageSkip(w){ return w.garbage && state.filterMode==='skip'; }
 function handleChar(ch){
  if(!state.running) return;
- if(state.mode==='dictation'||state.mode==='pasat') return;
- if(state.stopActive){ state.stopFails++; state.errors++; playPenalty(); $('#hud-stop-sub').textContent='STOP violation!'; setTimeout(()=>$('#hud-stop-sub').textContent='live counter',800); updateHUD(); return; }
+ if(state.mode==='recall' && state.recallPhase!=='recall') return;
+ if(state.stopActive){ state.stopFails++; state.errors++; playPenalty(); $('#hud-stop-sub').textContent='STOP violation!'; setTimeout(function(){$('#hud-stop-sub').textContent='live counter';},800); updateHUD(); return; }
  const w=state.words[state.wi];
  if(!w) return;
- if(w.garbage){
-  // must press Enter to skip; typing letters = error
+ if(isGarbageSkip(w)){
   if(ch===' '||ch==='Enter') return;
   state.keys++; adapt(false); playError(); flashCharError(); renderWords(); return;
  }
  if(ch===' '){
-  // space: must be at end of word
   if(state.ci>=w.t.length){
    state.keys++; state.correct++;
    const now=Date.now(); state.rts.push(now-state.lastT); state.lastT=now;
-   adapt(true); advanceWord(); renderWords();
+   adapt(true); advanceWord(); afterAdvance(); renderWords();
   } else { state.keys++; adapt(false); playError(); markWordError(); }
   return;
  }
- if(state.ci>=w.t.length) return; // wait for space
- const expected=w.t[state.ci];
+ if(state.ci>=w.t.length) return;
+ const expected=Array.prototype.slice.call(w.t)[state.ci];
  const now=Date.now(); const rt=now-state.lastT; state.lastT=now;
  state.keys++;
  if(ch===expected){
@@ -608,9 +930,19 @@ function handleChar(ch){
   if(!w.typed) w.typed={};
   w.typed[state.ci]=false;
   adapt(false); playError();
+  if(state.settings.noBackspace){ state.ci++; }
  }
  renderWords();
- if(state.wi>=state.words.length-2){ state.words.push(...buildWords().slice(0,30)); renderWords(); }
+ afterAdvance();
+}
+function afterAdvance(){
+ if(state.mode==='vocab'){ ensureVocab(); return; }
+ if(state.mode==='recall') return;
+ if(state.wi>=state.words.length-2){
+  const more=buildStream(30);
+  for(let i=0;i<more.length;i++) state.words.push(more[i]);
+  renderWords();
+ }
 }
 function markWordError(){
  const w=state.words[state.wi];
@@ -618,167 +950,210 @@ function markWordError(){
  w.typed[state.ci]=false;
  renderWords();
 }
-function flashCharError(){ stageEl.animate([{transform:'translateX(0)'},{transform:'translateX(-4px)'},{transform:'translateX(4px)'},{transform:'translateX(0)'}],{duration:120}); }
+function flashCharError(){ try{ stageEl.animate([{transform:'translateX(0)'},{transform:'translateX(-4px)'},{transform:'translateX(4px)'},{transform:'translateX(0)'}],{duration:120}); }catch(e){} }
 function advanceWord(){
  state.words[state.wi].done=true;
  state.wi++; state.ci=0;
+ if(state.wi>=state.words.length && state.mode==='recall'){ renderWords(); finish(); }
 }
 function handleBackspace(){
  if(!state.running||state.stopActive) return;
- if(state.mode==='dictation'||state.mode==='pasat') return;
+ if(state.settings.noBackspace) return;
+ if(state.mode==='recall' && state.recallPhase!=='recall') return;
  if(state.ci>0){ state.ci--; const w=state.words[state.wi]; if(w.typed) delete w.typed[state.ci]; renderWords(); }
 }
-// ENTER = skip garbage (mode 3)
 function handleEnter(){
  if(!state.running) return;
- if(state.mode==='dictation'){ submitDict(); return; }
+ if(state.mode==='recall' && state.recallPhase!=='recall') return;
  const w=state.words[state.wi];
- if(w&&w.garbage){
+ if(w&&isGarbageSkip(w)){
   w.skipped=true; state.keys++; state.correct++;
   const now=Date.now(); state.rts.push(now-state.lastT); state.lastT=now;
-  adapt(true); playTick(); advanceWord(); renderWords();
+  adapt(true); playTick(); advanceWord(); afterAdvance(); renderWords();
+ } else if(w&&w.garbage){
+  state.keys++; adapt(false); playError(); renderWords();
  } else if(state.mode==='filter'){
-  // pressing enter on real word = error
   state.keys++; adapt(false); playError();
  }
 }
-// DICTATION
-function nextDictWord(first){
- const q=state.dict.queue[state.dict.idx]||randWord();
- const mask='•'.repeat(String(q).length);
- $('#dict-mask').textContent=mask;
- $('#dict-input').value='';
- if(!first){ /* ISI gap handled by caller */ }
- if(state.running||first){
-  setTimeout(()=>{ if(state.mode==='dictation'&&(state.running||first)) speak(q); }, first?300:10);
- }
- state.dict.t0=Date.now();
-}
-function submitDict(){
- if(!state.running && !state.finished){
-  // allow pre-start? require start
-  return;
- }
- if(!state.running) return;
- const q=state.dict.queue[state.dict.idx];
- const val=$('#dict-input').value.trim();
- if(!val) return;
- const now=Date.now();
- state.keys+=Math.max(val.length,q.length); 
- let ok=val.toLowerCase()===String(q).toLowerCase();
- let correctChars=0;
- for(let i=0;i<Math.max(val.length,q.length);i++) if(val[i]&&q[i]&&val[i].toLowerCase()===q[i].toLowerCase()) correctChars++;
- state.correct+=correctChars;
- state.rts.push(now-state.dict.t0);
- if(ok){ adapt(true); } else { adapt(false); playError(); }
- state.dict.idx++;
- if(state.dict.idx>=state.dict.queue.length) state.dict.queue.push(...Array.from({length:20},()=>randWord()));
- // ISI-paced next stimulus
- const gap=Math.min(4000,Math.max(300,state.isi*0.6));
- $('#dict-mask').textContent=ok?'✓':'✗ '+q;
- setTimeout(()=>{ if(state.running) nextDictWord(); },gap);
- updateHUD();
-}
-// PASAT
-function buildPasatKeys(){
- const box=$('#pasat-keys'); box.innerHTML='';
- for(let i=0;i<10;i++){ const b=document.createElement('button'); b.textContent=i; b.onclick=()=>pasatAnswer(i); box.appendChild(b); }
-}
-function nextPasat(first){
- if(!state.running&&!first) return;
- const d=Math.floor(Math.random()*10);
- state.pasat.prev=state.pasat.cur;
- state.pasat.cur=d;
- if(state.pasat.prev===null){ state.pasat.prev=d; }
- $('#pasat-prev').textContent='previous: '+(state.pasat.prev??'–');
- $('#pasat-cur').textContent=d;
- try{ if(state.settings.sound) speak(String(d)); }catch(e){}
- state.pasat.t0=Date.now(); state.pasat.answered=false;
- $('#pasat-feedback').textContent='('+state.pasat.prev+' + '+d+') mod 10 = ?';
- clearTimeout(state.pasat.timeout);
- state.pasat.timeout=setTimeout(()=>{
-  if(!state.pasat.answered&&state.running){
-   state.keys++; adapt(false); playError();
-   $('#pasat-feedback').textContent='⏱ missed! answer was '+((state.pasat.prev+d)%10);
-   setTimeout(()=>{ if(state.running) nextPasat(); },400);
-  }
- }, Math.max(700,state.isi));
-}
-function pasatAnswer(a){
- if(!state.running||state.pasat.answered) return;
- if(state.stopActive){ state.stopFails++; playPenalty(); return; }
- const {prev,cur}=state.pasat;
- if(prev===null||cur===null) return;
- const expected=(prev+cur)%10;
- const now=Date.now(); state.rts.push(now-state.pasat.t0);
- state.keys++;
- state.pasat.answered=true; clearTimeout(state.pasat.timeout);
- if(a===expected){ state.correct++; adapt(true); $('#pasat-feedback').textContent='✓ correct'; }
- else { adapt(false); playError(); $('#pasat-feedback').textContent='✗ expected '+expected; }
- updateHUD();
- setTimeout(()=>{ if(state.running) nextPasat(); }, Math.max(250,state.isi*0.35));
-}
-// EVENTS
-window.addEventListener('keydown',e=>{
- const inDictInput=document.activeElement===$('#dict-input');
+/* EVENTS */
+window.addEventListener('keydown',function(e){
  if(e.key==='Tab'){ e.preventDefault(); start(); return; }
  if(e.key==='Escape'){ if(state.running) finish(); return; }
- if(state.mode==='dictation'){
-  if(e.key==='Enter'&&!state.running){ start(); return; }
-  if(!state.running) { if(e.key.length===1) start(); return; }
-  if(inDictInput){
-   if(e.key==='Enter'){ e.preventDefault(); submitDict(); }
-   else if(e.key.toLowerCase()==='r'&&e.ctrlKey){ e.preventDefault(); replayDict(); }
-   return; // let input handle typing
-  } else {
-   if(e.key.toLowerCase()==='r'){ replayDict(); $('#dict-input').focus(); return; }
-   $('#dict-input').focus(); return;
-  }
- }
- if(state.mode==='pasat'){
-  if(!state.running){ if(/^[0-9]$/.test(e.key)||e.key==='Enter') start(); return; }
-  if(/^[0-9]$/.test(e.key)){ pasatAnswer(parseInt(e.key,10)); e.preventDefault(); }
+ if(state.mode==='recall' && state.running && state.recallPhase==='preview'){
+  if(e.key.length===1||e.key==='Enter'||e.key===' '){ e.preventDefault(); endPreview(); }
   return;
  }
- // modes 1-3
  if(!state.running){ if(e.key.length===1&&!e.ctrlKey&&!e.metaKey) start(); return; }
  if(e.ctrlKey||e.metaKey||e.altKey) return;
  if(e.key==='Backspace'){ e.preventDefault(); handleBackspace(); return; }
  if(e.key==='Enter'){ e.preventDefault(); handleEnter(); return; }
- if(e.key===' '){ e.preventDefault(); const w=state.words[state.wi]; if(w&&w.garbage){ handleEnter(); } else handleChar(' '); return; }
+ if(e.key===' '){ e.preventDefault(); const w=state.words[state.wi]; if(w&&isGarbageSkip(w)){ handleEnter(); } else handleChar(' '); return; }
  if(e.key.length===1){ handleChar(e.key); }
 });
-function replayDict(){
- if(state.mode!=='dictation') return;
- const q=state.dict.queue[state.dict.idx];
- state.dict.replays++; speak(q);
+stageEl.addEventListener('click',function(){ stageEl.focus(); });
+document.addEventListener('click',function(e){ if(!stageEl.contains(e.target)) stageEl.classList.add('unfocused'); else stageEl.classList.remove('unfocused'); });
+$('#mode-tabs').addEventListener('click',function(e){ const b=e.target.closest('button'); if(b) setMode(b.getAttribute('data-mode')); });
+$('#text-group').addEventListener('click',function(e){
+ const b=e.target.closest('button'); if(!b) return;
+ const btns=document.querySelectorAll('#text-group button');
+ for(let i=0;i<btns.length;i++) btns[i].classList.toggle('active',btns[i]===b);
+ state.textSource=b.getAttribute('data-text'); reset();
+});
+$('#time-group').addEventListener('click',function(e){
+ const b=e.target.closest('button'); if(!b) return;
+ const btns=document.querySelectorAll('#time-group button');
+ for(let i=0;i<btns.length;i++) btns[i].classList.toggle('active',btns[i]===b);
+ state.duration=parseInt(b.getAttribute('data-time'),10); reset();
+});
+document.addEventListener('input',function(e){
+ if(e.target.classList&&e.target.classList.contains('js-garbage')){
+  state.settings.garbage=parseInt(e.target.value,10); saveSettings(); syncInlineLabels();
+  if(!state.running) reset();
+ }
+ if(e.target.classList&&e.target.classList.contains('js-preview')){
+  state.settings.preview=parseFloat(e.target.value); saveSettings(); syncInlineLabels();
+  if(!state.running) reset();
+ }
+});
+function syncInlineLabels(){
+ const gv=document.querySelectorAll('.js-garbage-val');
+ for(let i=0;i<gv.length;i++) gv[i].textContent=state.settings.garbage+'%';
+ const gi=document.querySelectorAll('.js-garbage');
+ for(let i=0;i<gi.length;i++) gi[i].value=state.settings.garbage;
+ const pv=document.querySelectorAll('.js-preview-val');
+ for(let i=0;i<pv.length;i++) pv[i].textContent=state.settings.preview+'s';
+ const pi=document.querySelectorAll('.js-preview');
+ for(let i=0;i<pi.length;i++) pi[i].value=state.settings.preview;
 }
-$('#btn-replay').onclick=replayDict;
-$('#dict-input').addEventListener('keydown',e=>{ e.stopPropagation(); if(e.key==='Enter'){e.preventDefault();submitDict();} });
-stageEl.addEventListener('click',()=>{ stageEl.focus(); if(state.mode==='dictation') $('#dict-input').focus(); });
-document.addEventListener('click',e=>{ if(!stageEl.contains(e.target)) stageEl.classList.add('unfocused'); else stageEl.classList.remove('unfocused'); });
-$('#mode-tabs').addEventListener('click',e=>{ const b=e.target.closest('button'); if(b) setMode(b.dataset.mode); });
-$('#time-group').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return;
- document.querySelectorAll('#time-group button').forEach(x=>x.classList.toggle('active',x===b));
- state.duration=parseInt(b.dataset.time,10); reset(); });
 $('#btn-start').onclick=start;
 $('#btn-restart').onclick=start;
-$('#btn-close-results').onclick=()=>$('#results-modal').classList.remove('open');
-$('#btn-clear-history').onclick=()=>{ localStorage.removeItem('mindbuild_history'); renderHistory(); };
-$('#nav-results').onclick=()=>{ if(!state.finished&&state.keys>0) finish(); else { renderHistory(); $('#results-modal').classList.add('open'); } };
-$('#nav-history').onclick=()=>{ renderHistory(); $('#results-modal').classList.add('open'); };
-document.querySelectorAll('#topnav button').forEach(b=>b.onclick=()=>{ document.querySelectorAll('#topnav button').forEach(x=>x.classList.remove('active')); b.classList.add('active'); });
-// settings
-$('#settings-toggle').onclick=()=>$('#settings-panel').classList.toggle('open');
-function bindSwitch(id,fn){ const el=$(id); el.onclick=()=>{ el.classList.toggle('on'); fn(el.classList.contains('on')); }; }
-bindSwitch('#sw-sound',v=>state.settings.sound=v);
-bindSwitch('#sw-errchime',v=>state.settings.errChime=v);
-bindSwitch('#sw-caret',v=>state.settings.smoothCaret=v);
-bindSwitch('#sw-blind',v=>{state.settings.blind=v; wordsEl.classList.toggle('locked',false);});
-$('#voice-rate').oninput=e=>{ state.settings.voiceRate=parseFloat(e.target.value); $('#voice-rate-val').textContent=state.settings.voiceRate.toFixed(1); };
-$('#stop-freq').oninput=e=>{ state.settings.stopFreq=parseInt(e.target.value,10); $('#stop-freq-val').textContent=['low','med','high'][state.settings.stopFreq]; };
-// init
-buildPasatKeys(); setMode('standard'); renderHistory();
+$('#btn-close-results').onclick=function(){ $('#results-modal').classList.remove('open'); };
+$('#btn-clear-history').onclick=function(){ try{localStorage.removeItem('mindbuild_history');}catch(e){} renderHistory(); };
+$('#nav-results').onclick=function(){ if(!state.finished&&state.keys>0) finish(); else { renderHistory(); $('#results-modal').classList.add('open'); } };
+$('#nav-history').onclick=function(){ renderHistory(); $('#results-modal').classList.add('open'); };
+const topBtns=document.querySelectorAll('#topnav button');
+for(let i=0;i<topBtns.length;i++) topBtns[i].onclick=function(){ for(let j=0;j<topBtns.length;j++) topBtns[j].classList.remove('active'); this.classList.add('active'); };
+/* SETTINGS MODAL */
+function setSwitch(id,on){ $(id).classList.toggle('on',!!on); }
+function applySettingsToUI(){
+ const s=state.settings;
+ setSwitch('#sw-sound',s.sound); setSwitch('#sw-errchime',s.errChime); setSwitch('#sw-caret',s.smoothCaret);
+ setSwitch('#sw-punct',s.punct); setSwitch('#sw-caps',s.caps); setSwitch('#sw-numbers',s.numbers);
+ setSwitch('#sw-symbols',s.symbols); setSwitch('#sw-noback',s.noBackspace);
+ $('#isi-floor').value=s.isiFloor; $('#isi-floor-val').textContent=s.isiFloor+'ms';
+ $('#stop-freq').value=s.stopFreq; $('#stop-freq-val').textContent=['low','med','high'][s.stopFreq];
+ $('#garbage-density').value=s.garbage; $('#garbage-val').textContent=s.garbage+'%';
+ $('#preview-time').value=s.preview; $('#preview-val').textContent=s.preview+'s';
+}
+function bindSwitch(id,key){
+ $(id).onclick=function(){
+  const on=!this.classList.contains('on');
+  this.classList.toggle('on',on);
+  state.settings[key]=on; saveSettings();
+  if(!state.running && (key==='punct'||key==='caps'||key==='numbers'||key==='symbols')) reset();
+ };
+}
+$('#settings-toggle').onclick=function(){ applySettingsToUI(); $('#settings-modal').classList.add('open'); };
+$('#btn-close-settings').onclick=function(){ $('#settings-modal').classList.remove('open'); };
+$('#settings-modal').addEventListener('click',function(e){ if(e.target===this) this.classList.remove('open'); });
+bindSwitch('#sw-sound','sound'); bindSwitch('#sw-errchime','errChime'); bindSwitch('#sw-caret','smoothCaret');
+bindSwitch('#sw-punct','punct'); bindSwitch('#sw-caps','caps'); bindSwitch('#sw-numbers','numbers');
+bindSwitch('#sw-symbols','symbols'); bindSwitch('#sw-noback','noBackspace');
+$('#isi-floor').oninput=function(e){ state.settings.isiFloor=parseInt(e.target.value,10); $('#isi-floor-val').textContent=state.settings.isiFloor+'ms'; saveSettings(); };
+$('#stop-freq').oninput=function(e){ state.settings.stopFreq=parseInt(e.target.value,10); $('#stop-freq-val').textContent=['low','med','high'][state.settings.stopFreq]; saveSettings(); };
+$('#garbage-density').oninput=function(e){ state.settings.garbage=parseInt(e.target.value,10); $('#garbage-val').textContent=state.settings.garbage+'%'; saveSettings(); syncInlineLabels(); if(!state.running) reset(); };
+$('#preview-time').oninput=function(e){ state.settings.preview=parseFloat(e.target.value); $('#preview-val').textContent=state.settings.preview+'s'; saveSettings(); syncInlineLabels(); if(!state.running) reset(); };
+/* ANKI .apkg IMPORT — JSZip + sql.js via CDN, fully client-side */
+const CDN={jszip:'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',sql:'https://cdn.jsdelivr.net/npm/sql.js@1.8.0/dist/sql-wasm.js',sqlWasm:'https://cdn.jsdelivr.net/npm/sql.js@1.8.0/dist/sql-wasm.wasm'};
+function loadScript(src){
+ return new Promise(function(res,rej){
+  if(document.querySelector('script[src="'+src+'"]')) return res();
+  const s=document.createElement('script'); s.src=src; s.onload=function(){res();}; s.onerror=function(){rej(new Error('load failed: '+src));};
+  document.head.appendChild(s);
+ });
+}
+function stripHtml(s){
+ const d=document.createElement('div'); d.innerHTML=String(s||'');
+ return (d.textContent||'').replace(/\[[a-z]+:[^\]]*\]/gi,' ').replace(/\s+/g,' ').trim();
+}
+function deckStatus(msg){ const el=$('#deck-info'); if(el) el.textContent=msg; }
+async function importApkg(file){
+ deckStatus('⏳ loading libraries…');
+ try{
+  await loadScript(CDN.jszip);
+  await loadScript(CDN.sql);
+  const SQL=await window.initSqlJs({locateFile:function(f){ return CDN.sqlWasm; }});
+  deckStatus('⏳ extracting '+file.name+'…');
+  const zip=await window.JSZip.loadAsync(file);
+  const dbName=zip.file('collection.anki21')? 'collection.anki21' : 'collection.anki2';
+  const entry=zip.file(dbName);
+  if(!entry) throw new Error('no collection db found');
+  const buf=await entry.async('uint8array');
+  const db=new SQL.Database(buf);
+  const models=JSON.parse(db.exec('select models from col')[0].values[0][0]);
+  const mid=Object.keys(models)[0];
+  const fields=models[mid].flds.map(function(f){ return f.name; });
+  const idx={};
+  fields.forEach(function(n,i){ idx[n.toLowerCase()]=i; });
+  function pick(row){
+   const names=['word','front','term','expression','vocab','vocabulary'];
+   for(let i=0;i<names.length;i++) if(idx[names[i]]!==undefined && row[idx[names[i]]]) return row[idx[names[i]]];
+   return row[0]||'';
+  }
+  function pickDef(row){
+   const names=['definition1','definition','meaning','back','gloss','def'];
+   for(let i=0;i<names.length;i++) if(idx[names[i]]!==undefined && row[idx[names[i]]]) return row[idx[names[i]]];
+   for(let i=0;i<row.length;i++){ if(i!==(idx.word||0) && row[i] && !/^\[sound:/i.test(row[i])) return row[i]; }
+   return '';
+  }
+  function pickEx(row){
+   const names=['example1','example','sentence','example sentence','context'];
+   for(let i=0;i<names.length;i++) if(idx[names[i]]!==undefined && row[idx[names[i]]]) return row[idx[names[i]]];
+   return '';
+  }
+  const res=db.exec('select flds from notes limit 20000');
+  const cards=[];
+  if(res.length){
+   const rows=res[0].values;
+   for(let i=0;i<rows.length;i++){
+    const flds=String(rows[i][0]).split('');
+    const row=flds.map(stripHtml);
+    const word=(pick(row)||'').trim();
+    if(!word || word.length>40) continue;
+    const def=(pickDef(row)||'').trim();
+    const ex=(pickEx(row)||'').trim();
+    if(!def && !ex) continue;
+    cards.push({word:word,def:def.slice(0,300),ex:ex.slice(0,400)});
+   }
+  }
+  try{ db.close(); }catch(e){}
+  if(!cards.length) throw new Error('no usable cards found');
+  for(let i=cards.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=cards[i]; cards[i]=cards[j]; cards[j]=t; }
+  if(state.mode!=='vocab') setMode('vocab');
+  setDeck(file.name.replace(/\.apkg$/i,''),cards);
+  renderSubBar(); reset();
+  deckStatus('✓ loaded '+cards.length+' cards from '+file.name);
+ }catch(err){
+  deckStatus('✗ import failed: '+(err&&err.message||err)+' — using built-in deck');
+ }
+}
+stageEl.addEventListener('dragover',function(e){ e.preventDefault(); stageEl.classList.add('dragover'); });
+stageEl.addEventListener('dragleave',function(){ stageEl.classList.remove('dragover'); });
+stageEl.addEventListener('drop',function(e){
+ e.preventDefault(); stageEl.classList.remove('dragover');
+ if(e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length){
+  const f=e.dataTransfer.files[0];
+  if(!/\.apkg$/i.test(f.name)){ deckStatus('✗ please drop an .apkg file'); return; }
+  if(state.mode!=='vocab') setMode('vocab');
+  importApkg(f);
+ }
+});
+/* INIT */
+applySettingsToUI();
+setDeck('built-in starter deck',builtinCards());
+setMode('standard');
+renderHistory();
 window.addEventListener('resize',updateCaret);
 })();
 </script>
